@@ -7,6 +7,7 @@
 #include <utility>
 
 #include "games/gomoku/gomoku_state.h"
+#include "games/xiangqi/xiangqi_state.h"
 
 namespace chess {
 
@@ -23,13 +24,18 @@ bool HumanConsolePlayer::IsHuman() const {
 
 Move HumanConsolePlayer::ChooseMove(const IGameState& state) {
     int board_size = 15;
+    const bool is_xiangqi = dynamic_cast<const XiangqiState*>(&state) != nullptr;
     if (const auto* gomoku = dynamic_cast<const GomokuState*>(&state)) {
         board_size = gomoku->BoardSize();
     }
 
     while (true) {
-        std::cout << name_ << " (" << SideToString(state.CurrentSide()) << ") "
-                  << "input row col [1-" << board_size << "]: ";
+        std::cout << name_ << " (" << SideToString(state.CurrentSide()) << ") ";
+        if (is_xiangqi) {
+            std::cout << "input from_row from_col to_row to_col [row 1-10, col 1-9]: ";
+        } else {
+            std::cout << "input row col [1-" << board_size << "]: ";
+        }
 
         std::string line;
         if (!std::getline(std::cin, line)) {
@@ -37,15 +43,27 @@ Move HumanConsolePlayer::ChooseMove(const IGameState& state) {
         }
 
         std::istringstream iss(line);
-        int row = 0;
-        int col = 0;
-        if (!(iss >> row >> col)) {
-            std::cout << "Invalid input, expected: row col\n";
-            continue;
+        Move move;
+        if (is_xiangqi) {
+            int from_row = 0;
+            int from_col = 0;
+            int to_row = 0;
+            int to_col = 0;
+            if (!(iss >> from_row >> from_col >> to_row >> to_col)) {
+                std::cout << "Invalid input, expected: from_row from_col to_row to_col\n";
+                continue;
+            }
+            move = Move{from_row - 1, from_col - 1, to_row - 1, to_col - 1, state.CurrentSide()};
+        } else {
+            int row = 0;
+            int col = 0;
+            if (!(iss >> row >> col)) {
+                std::cout << "Invalid input, expected: row col\n";
+                continue;
+            }
+            move = Move{-1, -1, row - 1, col - 1, state.CurrentSide()};
         }
-        row -= 1;
-        col -= 1;
-        Move move{-1, -1, row, col, state.CurrentSide()};
+
         if (!state.IsMoveLegal(move)) {
             std::cout << "Illegal move, please retry.\n";
             continue;

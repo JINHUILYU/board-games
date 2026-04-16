@@ -9,7 +9,7 @@
 #include "ai/gomoku_ai_player.h"
 #include "core/turn_engine.h"
 #include "games/gomoku/gomoku_state.h"
-#include "games/xiangqi/xiangqi_stub.h"
+#include "games/xiangqi/xiangqi_state.h"
 #include "storage/history_store.h"
 #include "ui/human_console_player.h"
 
@@ -96,6 +96,22 @@ void ReplayGomokuHistory(const HistoryStore& history_store) {
     std::cout << "Stored result: " << GameResultToString(record.result) << "\n";
 }
 
+void StartXiangqiGame() {
+    XiangqiState state;
+    HumanConsolePlayer black_player("Player-Black");
+    HumanConsolePlayer white_player("Player-White");
+
+    auto result = TurnEngine::Run(
+        state,
+        black_player,
+        white_player,
+        [](const IGameState& current_state) {
+            std::cout << "\n" << current_state.Render() << "\n";
+        });
+
+    std::cout << "Xiangqi finished: " << GameResultToString(result.result) << "\n";
+}
+
 }  // namespace
 
 void RunMainMenu() {
@@ -126,7 +142,7 @@ void RunMainMenu() {
             } else if (choice == 3) {
                 ReplayGomokuHistory(history_store);
             } else if (choice == 4) {
-                std::cout << XiangqiComingSoonMessage() << "\n";
+                StartXiangqiGame();
             }
         } catch (const std::exception& ex) {
             std::cout << "Error: " << ex.what() << "\n";

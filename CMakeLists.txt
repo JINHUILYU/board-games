@@ -13,7 +13,7 @@ add_executable(chess
     src/ui/human_console_player.cpp
     src/storage/history_store.cpp
     src/ui/menu.cpp
-    src/games/xiangqi/xiangqi_stub.cpp
+    src/games/xiangqi/xiangqi_state.cpp
 )
 
 target_include_directories(chess PRIVATE include)
