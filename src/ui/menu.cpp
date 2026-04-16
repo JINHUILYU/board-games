@@ -17,6 +17,20 @@ namespace chess::ui {
 
 namespace {
 
+std::string XiangqiResultToString(GameResult result) {
+    switch (result) {
+        case GameResult::kBlackWin:
+            return "BlackWin";
+        case GameResult::kWhiteWin:
+            return "RedWin";
+        case GameResult::kDraw:
+            return "Draw";
+        case GameResult::kOngoing:
+        default:
+            return "Ongoing";
+    }
+}
+
 int ReadIntInRange(const std::string& prompt, int min_value, int max_value) {
     while (true) {
         std::cout << prompt;
@@ -99,7 +113,7 @@ void ReplayGomokuHistory(const HistoryStore& history_store) {
 void StartXiangqiGame() {
     XiangqiState state;
     HumanConsolePlayer black_player("Player-Black");
-    HumanConsolePlayer white_player("Player-White");
+    HumanConsolePlayer white_player("Player-Red");
 
     auto result = TurnEngine::Run(
         state,
@@ -109,7 +123,7 @@ void StartXiangqiGame() {
             std::cout << "\n" << current_state.Render() << "\n";
         });
 
-    std::cout << "Xiangqi finished: " << GameResultToString(result.result) << "\n";
+    std::cout << "Xiangqi finished: " << XiangqiResultToString(result.result) << "\n";
 }
 
 }  // namespace

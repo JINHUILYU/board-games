@@ -11,6 +11,17 @@
 
 namespace chess {
 
+namespace {
+
+std::string DisplaySideName(const IGameState& state, Side side) {
+    if (dynamic_cast<const XiangqiState*>(&state) != nullptr) {
+        return side == Side::kBlack ? "Black" : "Red";
+    }
+    return SideToString(side);
+}
+
+}  // namespace
+
 HumanConsolePlayer::HumanConsolePlayer(std::string name)
     : name_(std::move(name)) {}
 
@@ -30,7 +41,7 @@ Move HumanConsolePlayer::ChooseMove(const IGameState& state) {
     }
 
     while (true) {
-        std::cout << name_ << " (" << SideToString(state.CurrentSide()) << ") ";
+        std::cout << name_ << " (" << DisplaySideName(state, state.CurrentSide()) << ") ";
         if (is_xiangqi) {
             std::cout << "input from_row from_col to_row to_col [row 1-10, col 1-9]: ";
         } else {

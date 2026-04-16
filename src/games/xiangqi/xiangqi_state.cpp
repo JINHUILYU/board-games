@@ -31,6 +31,24 @@ int Sign(int value) {
     return 0;
 }
 
+std::string XiangqiSideToString(Side side) {
+    return side == Side::kBlack ? "Black" : "Red";
+}
+
+std::string XiangqiResultToString(GameResult result) {
+    switch (result) {
+        case GameResult::kBlackWin:
+            return "BlackWin";
+        case GameResult::kWhiteWin:
+            return "RedWin";
+        case GameResult::kDraw:
+            return "Draw";
+        case GameResult::kOngoing:
+        default:
+            return "Ongoing";
+    }
+}
+
 }  // namespace
 
 XiangqiState::XiangqiState()
@@ -311,11 +329,11 @@ std::string XiangqiState::Render() const {
         }
         oss << '\n';
     }
-    oss << "Pieces: R/H/E/A/K/C/P (black, uppercase), r/h/e/a/k/c/p (white, lowercase)\n";
+    oss << "Pieces: R/H/E/A/K/C/P (black, uppercase), r/h/e/a/k/c/p (red, lowercase)\n";
     if (result_ == GameResult::kOngoing) {
-        oss << "Turn: " << SideToString(current_side_) << '\n';
+        oss << "Turn: " << XiangqiSideToString(current_side_) << '\n';
     } else {
-        oss << "Result: " << GameResultToString(result_) << '\n';
+        oss << "Result: " << XiangqiResultToString(result_) << '\n';
     }
     return oss.str();
 }
