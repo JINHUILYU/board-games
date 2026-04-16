@@ -3,7 +3,7 @@
 namespace chess {
 
 std::string XiangqiComingSoonMessage() {
-    return "Xiangqi module is planned and not implemented yet.";
+    return "Xiangqi uses a fixed 10x9 board. CLI gameplay is not implemented yet.";
 }
 
 }  // namespace chess

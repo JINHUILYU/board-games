@@ -7,7 +7,7 @@ Use CMake from the repository root:
 ```bash
 cmake -S . -B build
 cmake --build build
-./build/chess_cli
+./build/chess
 ```
 
 ## Test and lint
@@ -33,14 +33,14 @@ The executable starts in `main.cpp` and immediately delegates control to `chess:
 - **Game loop orchestration**: `TurnEngine::Run(...)` (`src/core/turn_engine.cpp`) drives turn-by-turn execution through the `IGameState` and `IPlayer` interfaces.
 - **Game implementation (current)**: Gomoku is implemented in `GomokuState` (`src/games/gomoku/gomoku_state.cpp`) and can be played human-vs-human or human-vs-AI.
 - **Players**:
-  - `HumanConsolePlayer` handles CLI input parsing/validation.
+  - `HumanConsolePlayer` handles input parsing/validation.
   - `GomokuAiPlayer` performs bounded minimax with alpha-beta pruning plus candidate-move pruning from `GomokuState::CandidateMoves(...)`.
 - **Persistence/replay**: `HistoryStore` (`src/storage/history_store.cpp`) writes/reads Gomoku records under `output/history`, and replay is implemented in menu flow.
-- **Planned module**: Xiangqi is currently a stub (`src/games/xiangqi/xiangqi_stub.cpp`) and only returns a placeholder message.
+- **Planned module**: Xiangqi is currently a stub (`src/games/xiangqi/xiangqi_stub.cpp`). The target game uses a fixed 10x9 board, and CLI gameplay is not implemented yet.
 
 ## Codebase-specific conventions
 
-- **Namespace layout**: core domain code uses `namespace chess`; CLI menu entrypoints are in `namespace chess::ui`.
+- **Namespace layout**: core domain code uses `namespace chess`; menu entrypoints are in `namespace chess::ui`.
 - **Interface-first turn engine**: new games/players should integrate through `IGameState` and `IPlayer` so they can be executed by `TurnEngine` without special-case branching.
 - **Coordinate convention**: internal board coordinates are zero-based (`row`, `col`), while console input/output is one-based. UI/player code is responsible for conversion.
 - **Side and stone mapping**:
@@ -49,6 +49,7 @@ The executable starts in `main.cpp` and immediately delegates control to `chess:
 - **Move integrity**: `TurnEngine` sets `move.side` from `state.CurrentSide()` and throws on illegal moves. Player implementations should return positions only and rely on engine/state legality checks.
 - **History file contract**:
   - file name prefix: `gomoku_YYYYMMDD_HHMMSS.json`
-  - top-level keys include `version`, `game`, `mode`, `difficulty`, `result`, `moves`
+  - top-level keys include `version`, `game`, `mode`, `board_size`, `difficulty`, `result`, `moves`
   - each move is stored as `{"r": <int>, "c": <int>, "p": "B"|"W"}`
   - replay and loader logic depends on this shape
+- **UI scope**: current product scope is CLI menu + text board rendering; GUI is out of scope for current milestones.
