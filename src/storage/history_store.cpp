@@ -153,7 +153,7 @@ bool HistoryStore::LoadGomoku(const std::filesystem::path& path, GomokuHistoryRe
         const int row = std::stoi((*it)[1].str());
         const int col = std::stoi((*it)[2].str());
         const char side_char = (*it)[3].str()[0];
-        out_record->moves.push_back(Move{row, col, CharToSide(side_char)});
+        out_record->moves.push_back(Move{-1, -1, row, col, CharToSide(side_char)});
     }
     return true;
 }

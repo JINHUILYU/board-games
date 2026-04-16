@@ -146,7 +146,7 @@ int GomokuAiPlayer::Search(const GomokuState& state, int depth, int alpha, int b
 
     for (const auto& cell : candidates) {
         GomokuState next = state;
-        next.ApplyMove(cell.first, cell.second);
+        next.ApplyMove(Move{-1, -1, cell.first, cell.second, state.CurrentSide()});
         const int value = Search(next, depth - 1, alpha, beta, ai_side);
         if (maximizing) {
             best = std::max(best, value);
@@ -187,10 +187,10 @@ Move GomokuAiPlayer::ChooseMove(const IGameState& state) {
 
     for (const auto& cell : candidates) {
         GomokuState next = *gomoku;
-        next.ApplyMove(cell.first, cell.second);
+        next.ApplyMove(Move{-1, -1, cell.first, cell.second, ai_side});
 
         if (next.Result() == WinResultFor(ai_side)) {
-            return Move{cell.first, cell.second, ai_side};
+            return Move{-1, -1, cell.first, cell.second, ai_side};
         }
 
         const int score = Search(next,
@@ -214,7 +214,7 @@ Move GomokuAiPlayer::ChooseMove(const IGameState& state) {
     const std::size_t top_k = std::min<std::size_t>(std::max(1, config_.random_top_k), ranked.size());
     std::uniform_int_distribution<std::size_t> dist(0, top_k - 1);
     const RankedMove picked = ranked[dist(rng_)];
-    return Move{picked.row, picked.col, ai_side};
+    return Move{-1, -1, picked.row, picked.col, ai_side};
 }
 
 }  // namespace chess

@@ -87,7 +87,7 @@ void ReplayGomokuHistory(const HistoryStore& history_store) {
               << " (board " << record.board_size << "x" << record.board_size << ")\n";
     for (std::size_t i = 0; i < record.moves.size(); ++i) {
         const Move& move = record.moves[i];
-        replay_state.ApplyMove(move.row, move.col);
+        replay_state.ApplyMove(move);
         std::cout << "Move " << (i + 1) << ": " << SideToString(move.side)
                   << " -> (" << (move.row + 1) << ", " << (move.col + 1) << ")\n";
     }
@@ -106,7 +106,7 @@ void RunMainMenu() {
         std::cout << "1) Gomoku: Human vs Human\n";
         std::cout << "2) Gomoku: Human vs AI\n";
         std::cout << "3) Gomoku: Replay History\n";
-        std::cout << "4) Xiangqi\n";
+        std::cout << "4) Xiangqi (fixed 10x9)\n";
         std::cout << "0) Exit\n";
 
         const int choice = ReadIntInRange("Choose: ", 0, 4);

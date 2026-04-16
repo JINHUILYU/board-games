@@ -13,8 +13,8 @@ public:
 
     Side CurrentSide() const override;
     GameResult Result() const override;
-    bool IsMoveLegal(int row, int col) const override;
-    bool ApplyMove(int row, int col) override;
+    bool IsMoveLegal(const Move& move) const override;
+    bool ApplyMove(const Move& move) override;
     std::vector<Move> LegalMoves() const override;
     std::string Render() const override;
     std::unique_ptr<IGameState> Clone() const override;

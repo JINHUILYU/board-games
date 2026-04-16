@@ -20,11 +20,11 @@ TurnEngine::SessionResult TurnEngine::Run(IGameState& state,
         Move move = current_player.ChooseMove(state);
         move.side = current_side;
 
-        if (!state.IsMoveLegal(move.row, move.col)) {
+        if (!state.IsMoveLegal(move)) {
             throw std::runtime_error("Illegal move provided by player: " + current_player.Name());
         }
 
-        state.ApplyMove(move.row, move.col);
+        state.ApplyMove(move);
         session.moves.push_back(move);
 
         if (on_state_updated) {

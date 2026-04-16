@@ -45,11 +45,12 @@ Move HumanConsolePlayer::ChooseMove(const IGameState& state) {
         }
         row -= 1;
         col -= 1;
-        if (!state.IsMoveLegal(row, col)) {
+        Move move{-1, -1, row, col, state.CurrentSide()};
+        if (!state.IsMoveLegal(move)) {
             std::cout << "Illegal move, please retry.\n";
             continue;
         }
-        return Move{row, col, state.CurrentSide()};
+        return move;
     }
 }
 

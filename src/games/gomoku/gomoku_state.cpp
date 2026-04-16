@@ -56,7 +56,9 @@ bool GomokuState::InBounds(int row, int col) const {
     return row >= 0 && row < board_size_ && col >= 0 && col < board_size_;
 }
 
-bool GomokuState::IsMoveLegal(int row, int col) const {
+bool GomokuState::IsMoveLegal(const Move& move) const {
+    const int row = move.row;
+    const int col = move.col;
     return result_ == GameResult::kOngoing && InBounds(row, col) && board_[row][col] == '.';
 }
 
@@ -91,10 +93,12 @@ bool GomokuState::CheckWinAt(int row, int col) const {
     return false;
 }
 
-bool GomokuState::ApplyMove(int row, int col) {
-    if (!IsMoveLegal(row, col)) {
+bool GomokuState::ApplyMove(const Move& move) {
+    if (!IsMoveLegal(move)) {
         return false;
     }
+    const int row = move.row;
+    const int col = move.col;
 
     const Side side = current_side_;
     board_[row][col] = StoneFor(side);
@@ -123,7 +127,7 @@ std::vector<Move> GomokuState::LegalMoves() const {
     for (int r = 0; r < board_size_; ++r) {
         for (int c = 0; c < board_size_; ++c) {
             if (board_[r][c] == '.') {
-                moves.push_back(Move{r, c, current_side_});
+                moves.push_back(Move{-1, -1, r, c, current_side_});
             }
         }
     }

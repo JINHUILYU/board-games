@@ -43,6 +43,8 @@ inline GameResult WinResultFor(Side side) {
 }
 
 struct Move {
+    int from_row = -1;
+    int from_col = -1;
     int row = -1;
     int col = -1;
     Side side = Side::kBlack;
